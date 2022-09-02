@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Skydash Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="~/Template/vendors/feather/feather.css">
+    <link rel="stylesheet" href="~/Template/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="~/Template/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="~/Template/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="~/Template/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/Template/css/vertical-layout-light/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="~/Template/images/favicon.png" />
+    @RenderSection("css", required: false)
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_navbar.html -->
+        @Html.Partial("_Navbar")
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_settings-panel.html -->
+            @Html.Partial("_settingsPanel")
+            <!-- partial -->
+            <!-- partial:../../partials/_sidebar.html -->
+            @Html.Partial("_sidebar")
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                @Html.Partial("_footer")
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="~/Template/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="~/Template/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <script src="~/Template/vendors/select2/select2.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="~/Template/js/off-canvas.js"></script>
+    <script src="~/Template/js/hoverable-collapse.js"></script>
+    <script src="~/Template/js/template.js"></script>
+    <script src="~/Template/js/settings.js"></script>
+    <script src="~/Template/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="~/Template/js/file-upload.js"></script>
+    <script src="~/Template/js/typeahead.js"></script>
+    <script src="~/Template/js/select2.js"></script>
+    <!-- End custom js for this page-->
+</body>
+
+</html>
