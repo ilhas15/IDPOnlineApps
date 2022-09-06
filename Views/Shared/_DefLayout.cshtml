@@ -5,7 +5,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Skydash Admin</title>
+    <title>IDP Online</title>
+    <script src="~/Scripts/jquery.min.js" type="text/javascript"></script>
     <!-- plugins:css -->
     <link rel="stylesheet" href="~/Template/vendors/feather/feather.css">
     <link rel="stylesheet" href="~/Template/vendors/ti-icons/css/themify-icons.css">
@@ -19,6 +20,11 @@
     <link rel="stylesheet" href="~/Template/css/vertical-layout-light/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="~/Template/images/favicon.png" />
+    <!--Datatable-->
+    <link rel="stylesheet" href="~/Template/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <!--vex-->
+    <link rel="stylesheet" href="~/Template/vendors/vex-master/dist/css/vex.css" />
+    <link rel="stylesheet" href="~/Template/vendors/vex-master/dist/css/vex-theme-default.css" />
     @RenderSection("css", required: false)
 </head>
 
@@ -54,7 +60,17 @@
     <!-- endinject -->
     <!-- Plugin js for this page -->
     <script src="~/Template/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <!--Select2-->
     <script src="~/Template/vendors/select2/select2.min.js"></script>
+    <!--Datatable-->
+    <script src="~/Template/vendors/datatables.net/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Template/vendors/datatables.net-bs4/dataTables.bootstrap4.js" type="text/javascript"></script>
+    <!--sweetalert-->
+    <script src="~/Template/vendors/sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <!--ver vex-->
+    <script src="~/Template/vendors/vex-master/dist/js/vex.combined.min.js" type="text/javascript"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-default'</script>
+   
     <!-- End plugin js for this page -->
     <!-- inject:js -->
     <script src="~/Template/js/off-canvas.js"></script>

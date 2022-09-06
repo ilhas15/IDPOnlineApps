@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -122,10 +125,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CuriculumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DAL\DALHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\IDPModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +151,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -806,6 +813,13 @@
     <Content Include="Template\vendors\datatables.net-bs4\dataTables.bootstrap4.css" />
     <Content Include="Template\vendors\datatables.net-bs4\dataTables.bootstrap4.js" />
     <Content Include="Template\vendors\datatables.net\jquery.dataTables.js" />
+    <Content Include="Template\vendors\datatables\dataTables.bootstrap4.css" />
+    <Content Include="Template\vendors\datatables\dataTables.bootstrap4.js" />
+    <Content Include="Template\vendors\datatables\dataTables.bootstrap4.min.css" />
+    <Content Include="Template\vendors\datatables\dataTables.bootstrap4.min.js" />
+    <Content Include="Template\vendors\datatables\dataTables.buttons.min.js" />
+    <Content Include="Template\vendors\datatables\jquery.dataTables.js" />
+    <Content Include="Template\vendors\datatables\jquery.dataTables.min.js" />
     <Content Include="Template\vendors\feather\feather.css" />
     <Content Include="Template\vendors\feather\fonts\feather-webfont.svg" />
     <Content Include="Template\vendors\flag-icon-css\css\flag-icon.min.css" />
@@ -1380,6 +1394,25 @@
     <Content Include="Template\vendors\ti-icons\fonts\themify.svg" />
     <Content Include="Template\vendors\twbs-pagination\jquery.twbsPagination.min.js" />
     <Content Include="Template\vendors\typeahead.js\typeahead.bundle.min.js" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-bottom-right-corner.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-default.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-flat-attack.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-os.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-plain.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-top.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex-theme-wireframe.css" />
+    <Content Include="Template\vendors\vex-master\dist\css\vex.css" />
+    <Content Include="Template\vendors\vex-master\dist\js\vex.combined.js" />
+    <Content Include="Template\vendors\vex-master\dist\js\vex.combined.min.js" />
+    <Content Include="Template\vendors\vex-master\dist\js\vex.js" />
+    <Content Include="Template\vendors\vex-master\dist\js\vex.min.js" />
+    <Content Include="Template\vendors\vex-master\docs\vex.gif" />
+    <Content Include="Template\vendors\vex-master\docs\welcome\index.html" />
+    <Content Include="Template\vendors\vex-master\Gruntfile.js" />
+    <Content Include="Template\vendors\vex-master\src\vex.combined.js" />
+    <Content Include="Template\vendors\vex-master\src\vex.js" />
+    <Content Include="Template\vendors\vex-master\test\build-test-amd.html" />
+    <Content Include="Template\vendors\vex-master\test\build-test.html" />
     <Content Include="Template\vendors\x-editable\bootstrap-editable.css" />
     <Content Include="Template\vendors\x-editable\bootstrap-editable.min.js" />
     <Content Include="Web.config" />
@@ -1723,11 +1756,34 @@
     <Content Include="Views\Shared\_sidebar.cshtml" />
     <Content Include="Views\Shared\_settingsPanel.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
-    <Content Include="Views\Home\Curiculum.cshtml" />
+    <Content Include="Views\Curiculum\Curiculum.cshtml" />
+    <Content Include="Template\vendors\vex-master\.gitignore" />
+    <Content Include="Template\vendors\vex-master\.hsdoc" />
+    <Content Include="Template\vendors\vex-master\bower.json" />
+    <Content Include="Template\vendors\vex-master\component.json" />
+    <Content Include="Template\vendors\vex-master\docs\api\1-Basic.md" />
+    <Content Include="Template\vendors\vex-master\docs\api\2-Themes.md" />
+    <Content Include="Template\vendors\vex-master\docs\api\3-Advanced.md" />
+    <Content Include="Template\vendors\vex-master\docs\api\4-Plugins.md" />
+    <Content Include="Template\vendors\vex-master\docs\intro.md" />
+    <Content Include="Template\vendors\vex-master\LICENSE" />
+    <Content Include="Template\vendors\vex-master\package-lock.json" />
+    <Content Include="Template\vendors\vex-master\package.json" />
+    <Content Include="Template\vendors\vex-master\README.md" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-bottom-right-corner.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-default.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-flat-attack.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-os.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-plain.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-top.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex-theme-wireframe.sass" />
+    <Content Include="Template\vendors\vex-master\sass\vex.sass" />
+    <Content Include="Template\vendors\vex-master\sass\_keyframes.sass" />
+    <Content Include="Template\vendors\vex-master\sass\_mixins.sass" />
+    <Content Include="Template\vendors\vex-master\UPGRADING.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

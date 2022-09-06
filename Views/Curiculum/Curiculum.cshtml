@@ -1,0 +1,239 @@
+﻿
+@{
+    ViewBag.Title = "Curiculum";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        $(document).ready(function () {
+            $('#table-curiculum').DataTable();
+            $('#btn-save').click(function(){
+                SaveHead_T()
+            });
+            //vex.dialog.confirm({
+            //    message: 'Are you absolutely sure you want to destroy the alien planet?',
+            //    callback: function (value) {
+            //        if (value) {
+                        
+            //        } else {
+            //            console.log('Chicken.')
+            //        }
+            //    }
+            //})
+            DropdownLevel()
+            TableHead()
+        });
+
+        const DropdownLevel = () => {
+            $('#slc_typelevel').change(function () {
+                let leveltype = document.getElementById('slc_typelevel').value;
+                const dto = {
+                    TypeLevel: leveltype
+                }
+                $.ajax({
+                    url: 'C_DropdownNameLevel',
+                    type: 'post',
+                    dataType: 'json',
+                    data: JSON.stringify(dto),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (res) {
+                        let data = JSON.parse(res)
+                        let trhtml = ''
+                        //let count = data.length
+                        console.log(data)
+                        trhtml = '<option disabled selected>Select Level</option>'
+                        data.forEach((val, i) => {
+                            trhtml += '<option value="' + val.JobLevel + '">' + val.JobLevel + '</option>'
+                        }) 
+                        //for (var i = 0; i < count; i++) {
+                        //    trhtml += '<option value="' + data[i].JobLevel + '">' + data[i].JobLevel + '</option>'
+                        //}
+                        $('#slc_name').empty();
+                        $('#slc_name').append(trhtml);
+                    },
+                    error: function (ex) {
+                        alert(JSON.stringify(ex));
+                    }
+                });
+            });
+        };
+        const SaveHead_T = () => {
+            let leveltype = document.getElementById('slc_typelevel').value;
+            let levelname = document.getElementById('slc_name').value;
+            const dto = {
+                TypeLevel: leveltype,
+                LevelName: levelname
+            }
+            $.ajax({
+                url: 'C_SaveHeadCuriculum',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(dto),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    console.log(data[0][""].toString())
+                    if (data[0][""].toString() == 'Found') {
+                        vex.dialog.alert({
+                        message: 'Jabatan Sudah ada',
+                        //callback: function (value) {
+                        //    if (value) {
+                        //        //location.reload()
+                        //    } else {
+                        //        //location.reload()
+                        //    }
+                        //}
+                        })
+                    } else {
+                        vex.dialog.alert({
+                            message: 'Jabatan ditambahkan',
+                            callback: function (value) {
+                                if (value) {
+                                    location.reload()
+                                } else {
+                                    location.reload()
+                                }
+                            }
+                        })
+                    }
+                    
+                },
+                error: function (ex) {
+                    alert(JSON.stringify(ex));
+                }
+            });
+            
+        };
+        const TableHead = () => {
+            $.ajax({
+                url: 'C_TableType',
+                type: 'POST',
+                //data: JSON.stringify(dto),
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    //var data = JSON.stringify(data);
+                    var result = JSON.parse(data);
+                    var table = $('#table-curiculum').DataTable({
+                        "pageLength": 10,
+                        "lengthChange": false,
+                        "paging": true,
+                        "info": false,
+                        "searching": true,
+                        "select": true,
+                        "bDestroy": true,
+                        "ordering": true,
+                        "scrollCollapse": true,
+                            //"dom": 'frtip',
+                        "data": result,
+                        "columns": [
+                            { "data": "Id" },
+                            { "data": "LevelType" },
+                            { "data": "NameType" },
+                            {
+                                "data": null,
+                                "defaultContent": "<button type='button' class='btn btn-primary' id='btn_delete'>Edit</button>  <button type='button' class='btn btn-danger' id='btn_delete'>Delete</button>"
+                            }
+                        ],
+                        'columnDefs' : [
+                            //hide the second & fourth column
+                            { 'visible': false, searchable: false, 'targets': [0] }
+                        ]
+                    });
+                    
+                    //TableDetail(claimno)
+
+                    },
+                    error: function (ex) {
+                        alert(JSON.stringify(ex));
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <button data-toggle="modal" data-target="#defaultModal" type="button" class="btn btn-primary btn-sm">Create</button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" >
+                <table class="table table-hover" id="table-curiculum" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Type</th>
+                            <th>Nama</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Dave</td>
+                            <td>Dave</td>
+                            <td>53275535</td>
+                            <td> </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create New Jabatan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-name">Type</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-merge">
+                                    <select class="js-example-basic-single w-100" id="slc_typelevel" style="width:100%">
+                                        <option disabled selected>Select Type</option>
+                                        <option value="Golongan">Golongan</option>
+                                        <option value="Jabatan">Jabatan</option>
+                                    </select>
+                                    @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Name</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-merge">
+                                    <select class="js-example-basic-single w-100" id="slc_name" style="width:100%">
+                                        @*<option value="4">4</option>
+                                        <option value="5">5</option>*@
+                                    </select>
+                                    @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                                </div>
+                            </div>
+                        </div>
+                       
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
