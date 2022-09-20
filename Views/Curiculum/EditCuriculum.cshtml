@@ -1,0 +1,493 @@
+﻿
+@{
+    ViewBag.Title = "EditCuriculum";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        $(document).ready(function () {
+            $('#btn-save').click(function(){
+                SaveDetail_T()
+            });
+            $('#customSwitch1').prop('checked', true);
+            $('#btn-editHead').click(function () {
+                UpdateHead()
+            });
+            $('#btn-saveupdate').click(function () {
+                UpdateDetail()
+            });
+            
+            $('#table-curiculum tbody').on('click', 'button[id="btn_edit"]', function () {
+                Edit_detailCuriculum(this);
+            });
+            TableDetail()
+            viewHead()
+            DropdownScore()
+        });
+
+        const viewHead = () => {
+            let id =  '@ViewBag.Id'
+            let dto = {
+                Id: parseInt(id)
+            }
+            $.ajax({
+                url: 'C_GetHeadCuriculum',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(dto),
+                contentType: 'application/json; charset=utf-8',
+                success: function (res) {
+                    const data = JSON.parse(res)
+                    document.getElementById('slc_typelevel').value = data[0].LevelType
+                    document.getElementById('slc_name').value = data[0].NameType
+                    
+                },
+                error: function (ex) {
+                    alert(JSON.stringify(ex));
+                }
+            });
+        }
+
+        const DropdownScore = () => {
+            $.ajax({
+                    url: 'C_GetScoreDropdown',
+                    type: 'post',
+                    dataType: 'json',
+                    //data: JSON.stringify(dto),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (res) {
+                        let data = JSON.parse(res)
+                        let trhtml = ''
+                        trhtml = '<option disabled selected>Select Score</option>'
+                        data.forEach((val, i) => {
+                            trhtml += '<option value="' + val.Score + '">' + val.Score + '</option>'
+                        }) 
+                        //for (var i = 0; i < count; i++) {
+                        //    trhtml += '<option value="' + data[i].JobLevel + '">' + data[i].JobLevel + '</option>'
+                        //}
+                        $('#slc_score').empty();
+                        $('#slc_score').append(trhtml);
+                        $('#slc_score-edit').empty();
+                        $('#slc_score-edit').append(trhtml);
+                    },
+                    error: function (ex) {
+                        alert(JSON.stringify(ex));
+                    }
+                });
+        }
+        const SaveDetail_T = () => {
+            let title = document.getElementById('txt_title').value;
+            let deskripsi = document.getElementById('txt_description').value;
+            let score = document.getElementById('slc_score').value;
+            var active = 1;
+            if ($('#customSwitch1').is(':checked')) {
+                active = 0;
+            }
+            else {
+               active = 1;
+            }    
+            const dto = {
+                Id: parseInt('@ViewBag.Id'),
+                Judul: title,
+                Deskripsi: deskripsi,
+                Score: score,
+                Isactive:active
+            }
+            $.ajax({
+                url: 'C_SaveDetailCuriculum',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(dto),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    vex.dialog.alert({
+                            message: 'Kompetensi ditambahkan',
+                            //callback: function (value) {
+                            //    if (value) {
+                            //        location.reload()
+                            //    } else {
+                            //        location.reload()
+                            //    }
+                            //}
+                        })
+                    
+                },
+                error: function (ex) {
+                    alert(JSON.stringify(ex));
+                }
+            });
+            
+        }
+        const UpdateHead = () => {
+            let leveltype = document.getElementById('slc_typelevel').value;
+            let levelname = document.getElementById('slc_name').value;
+            const dto = {
+                TypeLevel: leveltype,
+                LevelName: levelname,
+                Id: parseInt('@ViewBag.Id')
+            }
+            $.ajax({
+                url: 'C_UpdateHeadCuriculum',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(dto),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    vex.dialog.alert({
+                            message: 'Curiculum berhasil diubah',
+                            //callback: function (value) {
+                            //    if (value) {
+                            //        location.reload()
+                            //    } else {
+                            //        location.reload()
+                            //    }
+                            //}
+                        })
+                    
+                },
+                error: function (ex) {
+                    alert(JSON.stringify(ex));
+                }
+            });
+        }
+        const TableDetail = () => {
+            const dto = {
+                Id: parseInt('@ViewBag.Id')
+            }
+            $.ajax({
+                url: 'C_GetDetailCuriculum',
+                type: 'POST',
+                data: JSON.stringify(dto),
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    //var data = JSON.stringify(data);
+                    var result = JSON.parse(data);
+                    var table = $('#table-curiculum').DataTable({
+                        "pageLength": 10,
+                        "lengthChange": false,
+                        "paging": true,
+                        "info": false,
+                        "searching": true,
+                        "select": true,
+                        "bDestroy": true,
+                        "ordering": true,
+                        "scrollCollapse": true,
+                            //"dom": 'frtip',
+                        "data": result,
+                        "columns": [
+                            { "data": "Id" },
+                            { "data": "TitleCompetency" },
+                            { "data": "DeskripsiCompetency" },
+                            { "data": "MinScore" },
+                            {
+                                "data": "InActive",
+                                "render": function (data, meta) {
+                                    if (data == 0) {
+                                        return '<h5><span class="badge badge-success">Active</span></h5>'
+                                    } else if (data==1) {
+                                        return  '<h5><span class="badge badge-danger">InActive</span></h5>'
+                                    }
+                                }
+                            },
+                            {
+                                "data": null,
+                                "defaultContent": "<button type='button' class='btn btn-primary' id='btn_edit' data-toggle='modal' data-target='#editDetailModal'>Edit</button>"
+                            }
+                        ],
+                        'columnDefs' : [
+                            //hide the second & fourth column
+                            { 'visible': false, searchable: false, 'targets': [0] }
+                        ]
+                    });
+                    
+                    //TableDetail(claimno)
+
+                    },
+                    error: function (ex) {
+                        alert(JSON.stringify(ex));
+                    }
+                });
+        }
+        const Edit_detailCuriculum = (button) => {
+            const row = $(button).closest("TR")
+            const data = $('#table-curiculum').DataTable().row(row).data()
+            const id = data["Id"]
+
+            const dto = {
+                IdDetail: id
+            }
+            $.ajax({
+                url: 'C_GetEditDetailCuriculum',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(dto),
+                contentType: 'application/json; charset=utf-8',
+                success: function (res) {
+                    const data = JSON.parse(res)
+                    console.log(data)
+                    document.getElementById('txt_id').value = data[0].Id
+                    document.getElementById('txt_title-edit').value = data[0].TitleCompetency
+                    document.getElementById('txt_description-edit').value = data[0].DeskripsiCompetency
+                    document.getElementById('slc_score-edit').value = data[0].MinScore
+                    $('#slc_score-edit').trigger('change')
+                    if (data[0].InActive == 0) {
+                        $('#customSwitch2').prop('checked', true);
+                    } else {
+                        $('#customSwitch2').prop('checked', false);
+                    }
+
+                },
+                error: function (ex) {
+                    alert(JSON.stringify(ex));
+                }
+            });
+        }
+        const UpdateDetail = () => {
+            let id = document.getElementById('txt_id').value
+            let judul = document.getElementById('txt_title-edit').value
+            let detail = document.getElementById('txt_description-edit').value
+            let score = document.getElementById('slc_score-edit').value
+            var active = 1;
+            if ($('#customSwitch2').is(':checked')) {
+                active = 0;
+            }
+            else {
+               active = 1;
+            }
+            const dto = {
+                IdDetail: id,
+                Judul: judul,
+                Deskripsi: detail,
+                Score: score,
+                Isactive:active
+            }
+            $.ajax({
+                url: 'C_UpdateDetailCuriculum',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(dto),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    vex.dialog.alert({
+                            message: 'Kompetensi berhasil diubah',
+                            //callback: function (value) {
+                            //    if (value) {
+                            //        location.reload()
+                            //    } else {
+                            //        location.reload()
+                            //    }
+                            //}
+                        })
+                    
+                },
+                error: function (ex) {
+                    alert(JSON.stringify(ex));
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label" for="basic-default-name">Type</label>
+                        <div class="col-sm-8">
+                            <div class="input-group input-group-merge">
+                                <input type="text" class="form-control" id="slc_typelevel" value="" />
+                                @*<select class="js-example-basic-single w-100" id="slc_typelevel" style="width:100%">
+                        <option disabled selected>Select Type</option>
+                        <option value="Golongan">Golongan</option>
+                        <option value="Jabatan">Jabatan</option>
+                    </select>*@
+                                @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label" for="basic-default-email">Name</label>
+                        <div class="col-sm-8">
+                            <div class="input-group input-group-merge">
+                                <input type="text" class="form-control" id="slc_name" value="" />
+                                @*<select class="js-example-basic-single w-100" id="slc_name" style="width:100%">
+
+                    </select>*@
+                                @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-md btn-rounded" id="btn-editHead">Save </button>
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <button data-toggle="modal" data-target="#editModal" type="button" class="btn btn-primary btn-sm">New Curiculum</button>
+            <div class="table-responsive">
+                <table class="table table-hover" id="table-curiculum" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Minimum Score</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Dave</td>
+                            <td>Dave</td>
+                            <td>53275535</td>
+                            <td> </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create New Kompetensi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-name">Title</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="txt_title" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Description</label>
+                            <div class="col-sm-8">
+                                <textarea style="width:100%;height:120px;" class="form-control" id="txt_description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Minimum Score</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-merge">
+                                    <select class="js-example-basic-single w-100" id="slc_score" style="width:100%">
+                                        <option disabled selected>Select Type</option>
+                                        <option value="Golongan">Golongan</option>
+                                        <option value="Jabatan">Jabatan</option>
+                                    </select>
+                                    @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <label class="" for="basic-default-email">IsActive?</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                    <label class="custom-control-label" for="customSwitch1">Is Active?</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Kompetensi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-name">Id</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="txt_id" value="" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-name">Title</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="txt_title-edit" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Description</label>
+                            <div class="col-sm-8">
+                                <textarea style="width:100%;height:120px;" class="form-control" id="txt_description-edit"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Minimum Score</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-merge">
+                                    <select class="js-example-basic-single w-100" id="slc_score-edit" style="width:100%">
+                                        <option disabled selected>Select Type</option>
+                                        <option value="Golongan">Golongan</option>
+                                        <option value="Jabatan">Jabatan</option>
+                                    </select>
+                                    @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <label class="" for="basic-default-email">IsActive?</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch2">
+                                    <label class="custom-control-label" for="customSwitch2"> </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-saveupdate">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

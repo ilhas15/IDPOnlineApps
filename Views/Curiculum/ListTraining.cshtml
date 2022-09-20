@@ -1,0 +1,243 @@
+﻿
+@{
+    ViewBag.Title = "ListTraining";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        $(document).ready(function () {
+            TableListTraining()
+            //$('#table-curiculum').DataTable();
+            $('#btn-upload').click(function(){
+                uploadTraining()
+            });
+            $('#table-curiculum tbody').on('click', 'button[id="btn_edit"]', function () {
+                EditCuriculum(this);
+            });
+            
+        });
+        const TableListTraining = () => {
+            $.ajax({
+                url: 'C_TableListTraining',
+                type: 'POST',
+                //data: JSON.stringify(dto),
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    //var data = JSON.stringify(data);
+                    const result = JSON.parse(data);
+                    const table = $('#table-user').DataTable({
+                        "pageLength": 10,
+                        "lengthChange": false,
+                        "paging": true,
+                        "info": false,
+                        "searching": true,
+                        "select": true,
+                        "bDestroy": true,
+                        "ordering": true,
+                        "scrollCollapse": true,
+                            //"dom": 'frtip',
+                        "data": result,
+                        "columns": [
+                            { "data": "EmpName" },
+                            { "data": "JenisTraining" },
+                            { "data": "PlanTraining" },
+                            { "data": "ActualTraining" },
+                            { "data": "TrainingDate" },
+                            {
+                                "data": null,
+                                "render": function (data, meta) {
+                                    return '<button type="button" class="btn btn-info" id="btn_edit" data-toggle="modal" data-target="#editDetailModal">Edit</button>'
+                                }
+                            },
+                        ],
+                        //'columnDefs' : [
+                        //    //hide the second & fourth column
+                        //    { 'visible': false, searchable: false, 'targets': [0] }
+                        //]
+                    });
+                    
+                    
+
+                    },
+                    error: function (ex) {
+                        alert(JSON.stringify(ex));
+                    }
+                });
+        }
+        const uploadTraining = () => {
+            const formData = new FormData()
+            let totalFiles = document.getElementById('file_upload').files.length
+            for (var i = 0; i < totalFiles; i++) {
+                let file = document.getElementById('file_upload').files[i]
+                formData.append("file_upload", file)
+            }
+            $.ajax({
+                    type: "POST",
+                    url: 'UploadFileToServer',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                success: function (data) {
+                    alert('OK')
+                    },
+                    error: function (error) {
+                        
+                        console.log(JSON.stringify(error));
+                        //alert(JSON.stringify(error));
+                        //location.reload();
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Upload</button>
+            <div class="table-responsive">
+                <table class="table table-hover" id="table-user" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Jenis Training</th>
+                            <th>Plan Judul Training</th>
+                            <th>Actual Judul Training</th>
+                            <th>Tanggal Pelaksanaan</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Dave</td>
+                            <td>Dave</td>
+                            <td> </td>
+                            <td>Dave</td>
+                            <td> </td>
+                            <td>Dave</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Training</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label>File upload</label>
+                            <input type="file" name="img[]" id="file_upload" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload File">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                </span>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label>File upload</label>
+                                <input type="file" name="img[]" class="file-upload-default">
+                                <div class="input-group col-xs-12">
+                                    <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                    <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                    </span>
+                                </div>
+                            </div>*@
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-upload">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Training</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-name">Id</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="txt_id" value="" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-name">Nama</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="txt_title-edit" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Jenis Training</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-merge">
+                                    <select class="js-example-basic-single w-100" id="slc_train-edit" style="width:100%">
+                                        <option disabled selected>Select Type</option>
+                                        <option value="Golongan">Internal</option>
+                                        <option value="Jabatan">Public</option>
+                                        <option value="Jabatan">Project</option>
+                                    </select>
+                                    @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="basic-default-email">Minimum Score</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-merge">
+                                    <select class="js-example-basic-single w-100" id="slc_score-edit" style="width:100%">
+                                        <option disabled selected>Select Type</option>
+                                        <option value="Golongan">Golongan</option>
+                                        <option value="Jabatan">Jabatan</option>
+                                    </select>
+                                    @*<span class="input-group-text" id="basic-default-email2">@example.com</span>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <label class="" for="basic-default-email">IsActive?</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch2">
+                                    <label class="custom-control-label" for="customSwitch2"> </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-saveupdate">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "HardCompetency";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        $(document).ready(function () {
+            TableHard()
+        });
+        const TableHard = () => {
+            $.ajax({
+                url: 'C_TableJabatanKompetensi',
+                type: 'POST',
+                //data: JSON.stringify(dto),
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    //var data = JSON.stringify(data);
+                    var result = JSON.parse(data);
+                    var table = $('#table-hard').DataTable({
+                        "pageLength": 10,
+                        "lengthChange": false,
+                        "paging": true,
+                        "info": false,
+                        "searching": false,
+                        "select": true,
+                        "bDestroy": true,
+                        "ordering": true,
+                        "scrollCollapse": true,
+                            //"dom": 'frtip',
+                        "data": result,
+                        "columns": [
+                            {
+                                data: "NameType",
+                            },
+                            {
+                                data: "TitleCompetency",
+                            },
+                            {
+                                data: "MinScore",
+                            },
+                            {
+                                data: "InActive",
+                                "render": function (data) {
+                                    if (data == true) {
+                                        return  '<h5><span class="badge badge-danger">    </span></h5>'
+                                    } else {
+                                        return '<h5><span class="badge badge-success">    </span></h5>'
+                                    } 
+                                }
+                            },
+                        ],
+                        rowsGroup: [
+                          0
+                        ],
+                        //'rowCallback': function (row, data, index) {
+                        //    if (data["InActive"] == false) {
+                        //        $(row).find('td:eq(3)').css('background-color', 'green');
+                        //        $(row).find('td:eq(3)').css('color', 'green');
+                        //    } else {
+                        //        $(row).find('td:eq(3)').css('background-color', 'red');
+                        //        $(row).find('td:eq(3)').css('color', 'red');
+                        //    }
+
+                        //  }
+                        //'columnDefs' : [
+                        //    //hide the second & fourth column
+                        //    { 'visible': false, searchable: false, 'targets': [0] }
+                        //]
+                    });
+
+
+
+                    },
+                    error: function (ex) {
+                        alert(JSON.stringify(ex));
+                    }
+                });
+        };
+    </script>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="table-hard" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Jabatan</th>
+                            <th>Kompetensi</th>
+                            <th>Minimum Score</th>
+                            <th>Status</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Dave</td>
+                            <td>Dave</td>
+                            <td> </td>
+                            <td> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -127,6 +127,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CuriculumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IDPController.cs" />
     <Compile Include="DAL\DALHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1781,9 +1782,14 @@
     <Content Include="Template\vendors\vex-master\sass\_keyframes.sass" />
     <Content Include="Template\vendors\vex-master\sass\_mixins.sass" />
     <Content Include="Template\vendors\vex-master\UPGRADING.md" />
+    <Content Include="Views\Curiculum\EditCuriculum.cshtml" />
+    <Content Include="Views\Curiculum\ListTraining.cshtml" />
+    <Content Include="Views\Curiculum\SoftCompetency.cshtml" />
+    <Content Include="Views\Curiculum\HardCompetency.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\IDP\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
